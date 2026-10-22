@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: millionaire-club-backend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    command: gunicorn config.wsgi --bind 0.0.0.0:$PORT --workers 2
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
