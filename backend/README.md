@@ -28,6 +28,7 @@ pip install gunicorn
 gunicorn config.wsgi --bind 127.0.0.1:8000 --workers 3
 ```
 Nginx sert le reverse proxy vers Gunicorn.
+<<<<<<< HEAD
 
 ## Déploiement express sur Render (gratuit, admin public en 5 minutes)
 
@@ -40,3 +41,5 @@ Nginx sert le reverse proxy vers Gunicorn.
    et le front avec commandes en ligne est servi sur `https://xxx.onrender.com/`
 
 Note : l'offre gratuite s'endort après ~15 min d'inactivité (première visite = ~30s de réveil).
+=======
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))

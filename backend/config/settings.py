@@ -5,10 +5,15 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+<<<<<<< HEAD
 import os
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-limoncello-local-dev-change-me-en-production")
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
 STATIC_ROOT = BASE_DIR / "staticfiles"
+=======
+SECRET_KEY = "django-insecure-limoncello-local-dev-change-me-en-production"
+DEBUG = True
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 
 ALLOWED_HOSTS = ["*"]
 

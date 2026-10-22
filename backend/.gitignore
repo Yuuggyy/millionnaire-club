@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 db.sqlite3
 *.pyc
 __pycache__/
 staticfiles/
+=======
+__pycache__/
+*.pyc
+db.sqlite3
+.env
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))

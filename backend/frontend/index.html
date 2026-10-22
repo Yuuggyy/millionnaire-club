@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<<<<<<< HEAD
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+=======
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Millionaire Club Kinshasa — Menu Flipbook 3D</title>
@@ -640,8 +643,12 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
 <script>
 // CONFIG & STATE
 var RESTAURANT_SLUG = "millionnaire";
+<<<<<<< HEAD
 var API_BASE = window.FLIPBOOK_API_BASE ||
     (location.hostname.indexOf("pythonanywhere") !== -1 ? "" : "https://mclubkinshasa.pythonanywhere.com");
+=======
+var API_BASE = window.FLIPBOOK_API_BASE || "";
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 var pageFlip = null;
 var totalPages = 9;
 var lastFlipTime = 0;
@@ -671,6 +678,7 @@ function initBook() {
       minHeight: 400,
       maxHeight: 620,
       drawShadow: true,
+<<<<<<< HEAD
       flippingTime: 280,
       usePortrait: true,
       startZIndex: 0,
@@ -679,6 +687,16 @@ function initBook() {
       showCover: true,
       mobileScrollSupport: false,
       swipeDistance: 40,
+=======
+      flippingTime: 500,
+      usePortrait: true,
+      startZIndex: 0,
+      autoSize: true,
+      maxShadowOpacity: 0.6,
+      showCover: true,
+      mobileScrollSupport: false,
+      swipeDistance: 50,
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
       clickEventForward: false,
       useMouseEvents: true,
       disableFlipByClick: false
@@ -686,6 +704,7 @@ function initBook() {
 
     pageFlip.loadFromHTML(items);
 
+<<<<<<< HEAD
 // ---- Geste léger : swipe gauche = page suivante, swipe droite = page précédente ----
 (function () {
   var startX = 0, startY = 0, tracking = false;
@@ -727,6 +746,8 @@ function initBook() {
 })();
 
 
+=======
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
     var loadingMsg = document.getElementById("loadingMsg");
     if (loadingMsg) loadingMsg.style.display = "none";
     document.getElementById("book-container").style.display = "flex";
@@ -964,6 +985,7 @@ function submitOrder() {
 
   var apiUrl = (API_BASE ? API_BASE : "") + "/api/submitOrder/";
 
+<<<<<<< HEAD
   // envoi avec réessais automatiques (connexion mobile) — aucune donnée n'est perdue
   var essais = 0;
   var MAX_ESSAIS = 3;
@@ -1009,6 +1031,39 @@ function submitOrder() {
     });
   }
   envoyer();
+=======
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error("HTTP error " + r.status);
+    return r.json();
+  })
+  .then(function(data) {
+    if (data.success) {
+      cart = [];
+      updateCartBadge();
+      renderCart();
+      closeCart();
+      document.getElementById("tableInput").value = "";
+      document.getElementById("notesInput").value = "";
+      showToast("Commande envoyée ! Total: " + data.total + "$");
+    } else {
+      showToast("Erreur: " + (data.error || "Échec de la commande"));
+    }
+  })
+  .catch(function(err) {
+    console.warn("API réseau indisponible, sauvegarde en LocalStorage:", err);
+    saveOrderLocally(payload);
+  })
+  .finally(function() {
+    isSubmitting = false;
+    btn.disabled = false;
+    btn.textContent = "Envoyer la commande";
+  });
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 }
 
 // REPLI LOCALSTORAGE
@@ -1026,9 +1081,15 @@ function saveOrderLocally(payload) {
     document.getElementById("tableInput").value = "";
     document.getElementById("notesInput").value = "";
     
+<<<<<<< HEAD
     showToast("Connexion faible — commande mise en attente, elle sera transmise");
   } catch (e) {
     showToast("Connexion impossible — veuillez réessayer");
+=======
+    showToast("Hors ligne : commande enregistrée localement");
+  } catch (e) {
+    showToast("Erreur lors de l'enregistrement local");
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
   }
 }
 
@@ -1046,6 +1107,7 @@ function callWaiter() {
 
   var apiUrl = (API_BASE ? API_BASE : "") + "/api/callWaiter/";
 
+<<<<<<< HEAD
   var essaisW = 0;
 
   function envoyerAppel() {
@@ -1078,6 +1140,31 @@ function callWaiter() {
     })
   }
   envoyerAppel();
+=======
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    showToast(data.success ? "Serveur appelé !" : "Erreur: " + (data.error || "Échec"));
+  })
+  .catch(function() {
+    try {
+      var saved = JSON.parse(localStorage.getItem("millionnaire-appels") || "[]");
+      payload.created_at = new Date().toISOString();
+      saved.push(payload);
+      localStorage.setItem("millionnaire-appels", JSON.stringify(saved));
+      showToast("Hors ligne : appel enregistré localement");
+    } catch (e) {
+      showToast("Erreur réseau");
+    }
+  })
+  .finally(function() {
+    isCallingWaiter = false;
+  });
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 }
 
 document.getElementById("cartModal").addEventListener("click", function(e) {
@@ -1094,7 +1181,11 @@ function initParticles() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   particles = [];
+<<<<<<< HEAD
   var count = Math.min(30, Math.floor(window.innerWidth / 40));
+=======
+  var count = Math.min(60, Math.floor(window.innerWidth / 22));
+>>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
   for (var i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * canvas.width,
