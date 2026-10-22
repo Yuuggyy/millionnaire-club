@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Millionaire Club Kinshasa — Menu Flipbook 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#D4AF37;
+  --gold-light:#F3E5AB;
+  --gold-dark:#A38020;
+  --bg-dark:#0D0D0D;
+  --cream:#F8F9FA;
+  --bronze:#C5A059;
+  --text-dark:#1A1A1A;
+  --text-muted:#666666;
+  --accent-red:#e63946;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg-dark);color:var(--cream);font-family:'Montserrat','Inter',sans-serif}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* Canvas Particules */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* Header */
+.header{position:fixed;top:0;left:0;width:100%;padding:16px 22px;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(13,13,13,0.95) 0%,rgba(13,13,13,0) 100%);pointer-events:none}
+.logo{font-family:'Cinzel','Playfair Display',serif;font-size:20px;font-weight:900;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;text-shadow:0 0 10px rgba(212,175,55,0.3)}
+.logo span{color:var(--gold-light);font-weight:400;font-size:10px;display:block;letter-spacing:3px;font-family:'Montserrat',sans-serif;margin-top:2px}
+.nav-dots{display:flex;gap:7px;pointer-events:auto;flex-wrap:wrap;max-width:220px;justify-content:flex-end}
+.nav-dot{width:9px;height:9px;border-radius:50%;background:rgba(212,175,55,0.25);border:1px solid rgba(212,175,55,0.4);cursor:pointer;transition:all 0.3s}
+.nav-dot.active{background:var(--gold);box-shadow:0 0 12px var(--gold);transform:scale(1.35)}
+
+/* Container Book */
+#book-container{position:relative;z-index:10;margin-top:25px;max-width:400px;width:100%;display:flex;justify-content:center}
+.page-item{width:100%;height:100%;overflow:hidden}
+*::-webkit-scrollbar{display:none!important}
+*{scrollbar-width:none!important;-ms-overflow-style:none!important}
+
+/* Cover Page */
+.page-cover{background:linear-gradient(135deg,#0D0D0D 0%,#1A1710 50%,#0D0D0D 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;color:var(--cream);text-align:center;padding:35px 25px;position:relative;width:100%;height:100%;border:1px solid rgba(212,175,55,0.2)}
+.page-cover::before{content:'';position:absolute;top:15px;left:15px;right:15px;bottom:15px;border:2px solid var(--gold);border-radius:2px;opacity:0.6;pointer-events:none}
+.page-cover::after{content:'';position:absolute;top:19px;left:19px;right:19px;bottom:19px;border:1px solid var(--bronze);border-radius:2px;opacity:0.3;pointer-events:none}
+.cover-content{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;z-index:2}
+.cover-badge{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--bronze);margin-bottom:15px;font-weight:600}
+.page-cover h1{font-family:'Cinzel','Playfair Display',serif;font-size:32px;font-weight:900;color:var(--gold);margin-bottom:8px;letter-spacing:2px;text-shadow:0 2px 15px rgba(212,175,55,0.4)}
+.page-cover .subtitle{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-light);opacity:0.9;margin-top:6px;font-weight:500}
+.cover-logo{width:132px;max-width:60%;height:auto;margin-bottom:6px;filter:drop-shadow(0 2px 18px rgba(212,175,55,0.45));animation:logoGlow 3.5s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 2px 14px rgba(212,175,55,0.35))}50%{filter:drop-shadow(0 2px 26px rgba(212,175,55,0.6))}}
+.page-cover .ornament{width:70px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px 0}
+.cover-location{font-size:11px;line-height:1.6;color:var(--gold-light);opacity:0.85;margin-top:10px;letter-spacing:0.5px}
+.cover-rsvp{font-size:11px;color:var(--bronze);margin-top:10px;font-weight:600;letter-spacing:1px}
+.cover-footer{z-index:2;margin-top:15px;font-size:10px;letter-spacing:1.5px;color:rgba(248,249,250,0.6)}
+.cover-footer a{color:var(--gold);text-decoration:none;font-weight:600}
+.shimmer{position:absolute;top:0;left:0;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.12),transparent);animation:shimmer 3.5s infinite;pointer-events:none}
+
+/* Menu Page */
+.page-menu{background:url('logo-filigrane-papier.png') center 40%/55% no-repeat var(--cream);padding:24px 20px 35px 20px;height:100%;overflow-y:auto;position:relative;display:flex;flex-direction:column;justify-content:space-between}
+.menu-header{margin-bottom:12px}
+.page-menu h2{font-family:'Cinzel','Playfair Display',serif;font-size:18px;font-weight:700;color:var(--bg-dark);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
+.category-line{width:45px;height:2px;background:var(--gold);margin-bottom:12px}
+.menu-items-list{flex:1}
+.menu-item{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dotted rgba(212,175,55,0.3)}
+.menu-item-info h3{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px}
+.menu-item-info p{font-size:10px;color:var(--text-muted);max-width:180px;line-height:1.35;font-weight:400}
+.menu-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-left:8px}
+.menu-item-price{font-family:'Cinzel','Playfair Display',serif;font-size:15px;color:var(--bronze);font-weight:700;white-space:nowrap}
+.add-btn{width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0D0D0D;border:none;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.2s;flex-shrink:0;box-shadow:0 2px 6px rgba(212,175,55,0.3);touch-action:manipulation}
+.add-btn:hover{transform:scale(1.12);background:var(--gold-light)}
+.add-btn:active{transform:scale(0.92)}
+
+/* Page Footer */
+.page-footer{margin-top:auto;padding-top:8px;border-top:1px solid rgba(0,0,0,0.08);font-size:9px;color:#777;text-align:center;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.5px}
+.page-footer a{color:var(--bronze);text-decoration:none;font-weight:600}
+
+/* Contact Page */
+.page-contact{background:linear-gradient(135deg,#0D0D0D 0%,#1A1710 50%,#0D0D0D 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;color:var(--cream);text-align:center;padding:35px 25px;position:relative;width:100%;height:100%;border:1px solid rgba(212,175,55,0.2)}
+.page-contact::before{content:'';position:absolute;top:15px;left:15px;right:15px;bottom:15px;border:2px solid var(--gold);border-radius:2px;opacity:0.6;pointer-events:none}
+.page-contact h2{font-family:'Cinzel','Playfair Display',serif;font-size:24px;color:var(--gold);margin-bottom:6px;letter-spacing:1px}
+.contact-slogan{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light);opacity:0.9;margin-bottom:10px}
+.contact-info{font-size:12px;line-height:1.8;opacity:0.9;color:var(--cream)}
+.contact-info strong{color:var(--gold);font-weight:600}
+.call-button{margin-top:15px;padding:12px 28px;background:var(--gold);color:#0D0D0D;border:none;border-radius:30px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.3s;letter-spacing:1px;text-transform:uppercase;box-shadow:0 4px 15px rgba(212,175,55,0.3);touch-action:manipulation}
+.call-button:hover{transform:scale(1.05);background:var(--gold-light)}
+.waiter-button{margin-top:10px;padding:10px 24px;background:transparent;color:var(--gold);border:1.5px solid var(--gold);border-radius:30px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.3s;letter-spacing:1px;touch-action:manipulation}
+.waiter-button:hover{background:var(--gold);color:#0D0D0D}
+.contact-footer{z-index:2;margin-top:15px;font-size:10px;letter-spacing:1px;color:rgba(248,249,250,0.6)}
+.contact-footer a{color:var(--gold);text-decoration:none;font-weight:600}
+
+/* Controls & UI */
+.controls{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);display:none;gap:15px;z-index:100}
+.control-btn{width:42px;height:44px;border-radius:50%;background:rgba(13,13,13,0.7);border:1.5px solid var(--gold);color:var(--gold);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;backdrop-filter:blur(8px);touch-action:manipulation}
+.control-btn:hover{background:var(--gold);color:#0D0D0D;transform:scale(1.1)}
+.control-btn:disabled{opacity:0.3;cursor:not-allowed}
+.page-indicator{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);color:var(--gold-light);font-size:11px;letter-spacing:2px;z-index:100;opacity:0.75;font-weight:500}
+.swipe-hint{position:fixed;bottom:12px;right:18px;color:var(--gold-light);font-size:10px;opacity:0.5;z-index:100;animation:pulse 2s infinite}
+.loading-msg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gold);font-size:16px;z-index:200;text-align:center;font-family:'Cinzel',serif;letter-spacing:1px}
+
+/* CART FAB & MODAL */
+.cart-fab{position:fixed;bottom:15px;right:20px;width:54px;height:54px;border-radius:50%;background:var(--gold);color:#0D0D0D;border:none;font-size:22px;cursor:pointer;z-index:200;display:none;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:all 0.3s;touch-action:manipulation}
+.cart-fab:hover{transform:scale(1.1);background:var(--gold-light)}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;border-radius:11px;background:var(--accent-red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid #0D0D0D}
+.cart-badge:empty{display:none}
+.cart-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.cart-modal.open{display:flex}
+.cart-content{background:var(--cream);width:100%;max-width:420px;max-height:85vh;border-radius:20px 20px 0 0;overflow-y:auto;padding:22px;animation:slideUp 0.3s ease;color:var(--text-dark)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:2px solid var(--gold)}
+.cart-header h2{font-family:'Cinzel','Playfair Display',serif;font-size:20px;color:var(--bg-dark);font-weight:700}
+.cart-close{width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.08);border:none;font-size:18px;cursor:pointer;color:#333;display:flex;align-items:center;justify-content:center}
+.cart-empty{text-align:center;padding:30px 10px;color:var(--text-muted);font-size:13px;line-height:1.6}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.08)}
+.cart-item-info{flex:1}
+.cart-item-info h4{font-size:13px;color:var(--text-dark);font-weight:600;margin-bottom:2px}
+.cart-item-info span{font-size:12px;color:var(--bronze);font-weight:700}
+.cart-qty{display:flex;align-items:center;gap:8px;margin:0 10px}
+.cart-qty button{width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0D0D0D;border:none;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cart-qty span{font-size:14px;font-weight:600;min-width:18px;text-align:center}
+.cart-remove{background:none;border:none;color:var(--accent-red);font-size:18px;cursor:pointer;padding:4px}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin:15px 0;padding:12px;background:rgba(212,175,55,0.1);border-radius:10px;border:1px solid rgba(212,175,55,0.3)}
+.cart-total span{font-size:15px;font-weight:700;color:var(--bg-dark);font-family:'Cinzel',serif}
+.cart-input{width:100%;padding:12px;border:1.5px solid rgba(0,0,0,0.15);border-radius:10px;font-size:13px;margin-bottom:10px;font-family:'Montserrat',sans-serif;background:#fff}
+.cart-input:focus{outline:none;border-color:var(--gold)}
+.cart-submit{width:100%;padding:14px;background:var(--gold);color:#0D0D0D;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;letter-spacing:0.5px;box-shadow:0 4px 15px rgba(212,175,55,0.3)}
+.cart-submit:hover{background:var(--gold-light);transform:scale(1.01)}
+.cart-submit:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg-dark);color:var(--gold-light);border:1px solid var(--gold);padding:12px 24px;border-radius:30px;font-size:13px;z-index:400;opacity:0;transition:all 0.4s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.6);text-align:center;max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-10px)}
+
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}}
+@keyframes shimmer{0%{left:-100%}100%{left:200%}}
+@media(max-width:600px){
+  .page-cover h1{font-size:26px}
+  .logo{font-size:16px}
+  .header{padding:12px 16px}
+  .menu-item-info p{max-width:145px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="header">
+  <div class="logo">
+    MILLIONAIRE CLUB
+    <span>KINSHASA · LOUNGE & VIP CLUB</span>
+  </div>
+  <div class="nav-dots" id="navDots"></div>
+</div>
+
+<div class="loading-msg" id="loadingMsg">Chargement du menu Millionaire Club...</div>
+
+<div id="book-container" style="display:none">
+  <div id="book">
+
+    <!-- PAGE 1: COVER -->
+    <div class="page-item" data-density="hard">
+      <div class="page-cover">
+        <div class="shimmer"></div>
+        <div class="cover-badge">EXPERIENCE VIP</div>
+        <div class="cover-content">
+          <img class="cover-logo" src="logo-filigrane.png" alt="Millionaire Club Kinshasa">
+          <div class="ornament"></div>
+          <p class="subtitle">Élégance • Ambiance • Expériences VIP</p>
+          <p class="cover-location">72B, Boulevard du 30 Juin (en face CNSS)<br>Commune de la Gombe, Kinshasa</p>
+          <p class="cover-rsvp">RSVP: +243 890 900 002 / +243 894 799 886</p>
+        </div>
+        <div class="cover-footer">
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: SIGNATURES DU CLUB -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Signatures du Club</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Plateau Millionaire VIP" data-price="45">
+            <div class="menu-item-info">
+              <h3>Plateau Millionaire VIP</h3>
+              <p>Caviar, saumon fumé, carpaccio, toasts dorés</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">45$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Capitaine Braisé Royal" data-price="32">
+            <div class="menu-item-info">
+              <h3>Capitaine Braisé Royal</h3>
+              <p>Filet de capitaine mariné aux épices douces</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">32$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Carpaccio de Bœuf Truffé" data-price="24">
+            <div class="menu-item-info">
+              <h3>Carpaccio de Bœuf Truffé</h3>
+              <p>Huile de truffe et parmesan</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">24$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Risotto aux Saint-Jacques" data-price="38">
+            <div class="menu-item-info">
+              <h3>Risotto aux Saint-Jacques</h3>
+              <p>Risotto crémeux, beurre d'or</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">38$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: GRILLADES & VIANDES -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Grillades & Viandes</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Entrecôte Black Angus 300g" data-price="40">
+            <div class="menu-item-info">
+              <h3>Entrecôte Black Angus 300g</h3>
+              <p>Feu de bois, sauce poivre vert</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">40$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Brochettes du Millionnaire" data-price="22">
+            <div class="menu-item-info">
+              <h3>Brochettes du Millionnaire</h3>
+              <p>Filet de bœuf attendri, piments doux</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">22$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Côtelettes d'Agneau Rôties" data-price="35">
+            <div class="menu-item-info">
+              <h3>Côtelettes d'Agneau Rôties</h3>
+              <p>Romarin, mousseline patates douces</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">35$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Poulet Kuku Yaka VIP" data-price="25">
+            <div class="menu-item-info">
+              <h3>Poulet Kuku Yaka VIP</h3>
+              <p>Poulet fermier grillé, épices locales</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">25$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: FRUITS DE MER & TAPAS -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Fruits de Mer & Tapas</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Gambas Géantes Grillées" data-price="38">
+            <div class="menu-item-info">
+              <h3>Gambas Géantes Grillées</h3>
+              <p>Ail, persil, citron vert</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">38$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Tempura de Crevettes" data-price="18">
+            <div class="menu-item-info">
+              <h3>Tempura de Crevettes</h3>
+              <p>Sauce chili douce</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">18$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Platter de Tapas Fusion" data-price="28">
+            <div class="menu-item-info">
+              <h3>Platter de Tapas Fusion</h3>
+              <p>Nems, mini-brochettes, samoussas, calamars</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">28$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Ceviche de Mérou" data-price="22">
+            <div class="menu-item-info">
+              <h3>Ceviche de Mérou</h3>
+              <p>Passion et coriandre</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">22$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 5: COCKTAILS SIGNATURES -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Cocktails Signatures</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Golden Millionaire Martini" data-price="22">
+            <div class="menu-item-info">
+              <h3>Golden Millionaire Martini</h3>
+              <p>Vodka premium, sureau, paillettes d'or 24K</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">22$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Kinshasa Night Sunset" data-price="16">
+            <div class="menu-item-info">
+              <h3>Kinshasa Night Sunset</h3>
+              <p>Rhum vieux, passion, gingembre, hibiscus</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">16$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Smoky Old Fashioned" data-price="20">
+            <div class="menu-item-info">
+              <h3>Smoky Old Fashioned</h3>
+              <p>Bourbon, bitters, fumée de chêne</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">20$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Royal Mojito Passion" data-price="18">
+            <div class="menu-item-info">
+              <h3>Royal Mojito Passion</h3>
+              <p>Rhum blanc, passion, menthe, champagne</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">18$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 6: CHAMPAGNES & SPIRITUEUX -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Champagnes & Spiritueux</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Dom Pérignon Luminous" data-price="480">
+            <div class="menu-item-info">
+              <h3>Dom Pérignon Luminous</h3>
+              <p>Champagne d'exception, flacon lumineux</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">480$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Moët & Chandon Brut Impérial" data-price="130">
+            <div class="menu-item-info">
+              <h3>Moët & Chandon Brut Impérial</h3>
+              <p>Champagne classique des grands moments</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">130$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Veuve Clicquot Ponsardin" data-price="150">
+            <div class="menu-item-info">
+              <h3>Veuve Clicquot Ponsardin</h3>
+              <p>Champagne structuré et fruité</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">150$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Hennessy XO" data-price="380">
+            <div class="menu-item-info">
+              <h3>Hennessy XO</h3>
+              <p>Cognac d'exception aux arômes riches</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">380$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Johnnie Walker Blue Label" data-price="420">
+            <div class="menu-item-info">
+              <h3>Johnnie Walker Blue Label</h3>
+              <p>Whisky rare aux saveurs profondes</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">420$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 7: BOISSONS & SOFTS VIP -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Boissons & Softs VIP</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Red Bull Energy & Mix" data-price="8">
+            <div class="menu-item-info">
+              <h3>Red Bull Energy & Mix</h3>
+              <p>Sur glace ou en mixer</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">8$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="San Pellegrino 75cl" data-price="7">
+            <div class="menu-item-info">
+              <h3>San Pellegrino 75cl</h3>
+              <p>Eau minérale gazeuse rafraîchissante</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">7$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Cocktail de Jus Frais" data-price="10">
+            <div class="menu-item-info">
+              <h3>Cocktail de Jus Frais</h3>
+              <p>Ananas, passion, mangue, gingembre</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">10$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Mocktail Virgin Millionaire" data-price="12">
+            <div class="menu-item-info">
+              <h3>Mocktail Virgin Millionaire</h3>
+              <p>Menthe, citron vert, ginger ale</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">12$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 8: DESSERTS PRESTIGE -->
+    <div class="page-item">
+      <div class="page-menu">
+        <div class="menu-header">
+          <h2>Desserts Prestige</h2>
+          <div class="category-line"></div>
+        </div>
+        <div class="menu-items-list">
+          <div class="menu-item" data-name="Fondant au Chocolat & Or" data-price="16">
+            <div class="menu-item-info">
+              <h3>Fondant au Chocolat & Or</h3>
+              <p>Cœur coulant, feuille d'or</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">16$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Cheesecake Fruits de la Passion" data-price="14">
+            <div class="menu-item-info">
+              <h3>Cheesecake Fruits de la Passion</h3>
+              <p>Coulis passion acidulé</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">14$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+          <div class="menu-item" data-name="Assiette d'Exotisme Glacé" data-price="12">
+            <div class="menu-item-info">
+              <h3>Assiette d'Exotisme Glacé</h3>
+              <p>Sorbets mangue, maracudja, ananas rôti</p>
+            </div>
+            <div class="menu-item-right">
+              <div class="menu-item-price">12$</div>
+              <div class="add-btn-placeholder"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <span>Millionaire Club Kinshasa</span>
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 9: CONTACT & RESERVATIONS -->
+    <div class="page-item" data-density="hard">
+      <div class="page-contact">
+        <h2>MILLIONAIRE CLUB</h2>
+        <p class="contact-slogan">Élégance • Ambiance • Expériences VIP</p>
+        <div class="ornament"></div>
+        <div class="contact-info">
+          <p><strong>Adresse :</strong> 72B, Bd du 30 Juin</p>
+          <p>(En face de la CNSS)</p>
+          <p>Commune de la Gombe, Kinshasa - RDC</p>
+          <br>
+          <p><strong>RSVP & Table VIP :</strong></p>
+          <p>+243 890 900 002</p>
+          <p>+243 894 799 886</p>
+        </div>
+        <div>
+          <button class="call-button" onclick="openCart()">Voir mon panier</button>
+          <br>
+          <button class="waiter-button" onclick="callWaiter()">Appeler un serveur</button>
+        </div>
+        <div class="contact-footer">
+          <a href="tel:+243977555768">Inspire by YuuStore</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTROLS & INDICATOR -->
+<div class="page-indicator" id="pageIndicator" style="display:none">Page 1 / 9</div>
+<div class="controls">
+  <button class="control-btn" id="prevBtn" title="Page précédente">&lsaquo;</button>
+  <button class="control-btn" id="nextBtn" title="Page suivante">&rsaquo;</button>
+</div>
+<div class="swipe-hint" id="swipeHint" style="display:none">Glissez pour tourner la page &rsaquo;</div>
+
+<!-- CART FAB -->
+<button class="cart-fab" id="cartFab" onclick="openCart()" title="Panier">
+  &#128722;
+  <div class="cart-badge" id="cartBadge"></div>
+</button>
+
+<!-- CART MODAL -->
+<div class="cart-modal" id="cartModal">
+  <div class="cart-content">
+    <div class="cart-header">
+      <h2>Votre Commande</h2>
+      <button class="cart-close" onclick="closeCart()">&times;</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="cart-total" id="cartTotal" style="display:none">
+      <span>Total :</span>
+      <span id="totalAmount">0$</span>
+    </div>
+    <input type="text" id="tableInput" class="cart-input" placeholder="Numéro de table (ex: 7 ou VIP-2)">
+    <input type="text" id="notesInput" class="cart-input" placeholder="Notes ou demandes spéciales (optionnel)">
+    <button class="cart-submit" id="submitOrder" onclick="submitOrder()" disabled>Envoyer la commande</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ST PAGE FLIP SCRIPT -->
+<script src="page-flip.browser.min.js"></script>
+
+<script>
+// CONFIG & STATE
+var RESTAURANT_SLUG = "millionnaire";
+var API_BASE = window.FLIPBOOK_API_BASE || "";
+var pageFlip = null;
+var totalPages = 9;
+var lastFlipTime = 0;
+var cart = [];
+var isSubmitting = false;
+var isCallingWaiter = false;
+
+// INITIALISATION DU FLIPBOOK
+function initBook() {
+  try {
+    if (typeof St === "undefined" || !St.PageFlip) {
+      setTimeout(initBook, 100);
+      return;
+    }
+    var bookEl = document.getElementById("book");
+    if (!bookEl) return;
+    
+    var items = document.querySelectorAll(".page-item");
+    totalPages = items.length;
+
+    pageFlip = new St.PageFlip(bookEl, {
+      width: 380,
+      height: 540,
+      size: "stretch",
+      minWidth: 280,
+      maxWidth: 420,
+      minHeight: 400,
+      maxHeight: 620,
+      drawShadow: true,
+      flippingTime: 500,
+      usePortrait: true,
+      startZIndex: 0,
+      autoSize: true,
+      maxShadowOpacity: 0.6,
+      showCover: true,
+      mobileScrollSupport: false,
+      swipeDistance: 50,
+      clickEventForward: false,
+      useMouseEvents: true,
+      disableFlipByClick: false
+    });
+
+    pageFlip.loadFromHTML(items);
+
+    var loadingMsg = document.getElementById("loadingMsg");
+    if (loadingMsg) loadingMsg.style.display = "none";
+    document.getElementById("book-container").style.display = "flex";
+    document.getElementById("pageIndicator").style.display = "block";
+    document.querySelector(".controls").style.display = "flex";
+    document.getElementById("swipeHint").style.display = "block";
+    document.getElementById("cartFab").style.display = "flex";
+
+    buildNavDots();
+
+    pageFlip.on("flip", function(e) {
+      updateUI(e.data);
+      injectAddButtons();
+    });
+
+    pageFlip.on("changeState", function(e) {
+      if (e.data === "read") {
+        updateUI();
+        injectAddButtons();
+      }
+    });
+
+    updateUI();
+    setTimeout(injectAddButtons, 150);
+
+  } catch (err) {
+    console.error("Erreur d'initialisation du flipbook:", err);
+    var msg = document.getElementById("loadingMsg");
+    if (msg) {
+      msg.textContent = "Erreur de chargement. Veuillez rafraîchir la page.";
+      msg.style.color = "#e63946";
+    }
+  }
+}
+
+// INJECTION IDEMPOTENTE DES BOUTONS ADD
+function injectAddButtons() {
+  var menuItems = document.querySelectorAll(".page-item .menu-item, .stf__item .menu-item");
+  menuItems.forEach(function(mi) {
+    if (mi.querySelector(".add-btn")) return; // Idempotent check
+    var name = mi.getAttribute("data-name");
+    var price = parseFloat(mi.getAttribute("data-price"));
+    if (!name || isNaN(price)) return;
+    var placeholder = mi.querySelector(".add-btn-placeholder");
+    if (placeholder) {
+      var btn = document.createElement("button");
+      btn.className = "add-btn";
+      btn.setAttribute("type", "button");
+      btn.textContent = "+";
+      
+      // Block event propagation on pointerdown/touchstart/mousedown to stop page flip (stopPropagation, NOT preventDefault)
+      ["mousedown", "touchstart", "pointerdown"].forEach(function(ev) {
+        btn.addEventListener(ev, function(e) { e.stopPropagation(); }, true);
+      });
+      
+      btn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        addToCart(name, price);
+      });
+      placeholder.appendChild(btn);
+    }
+  });
+}
+
+// NAVIGATION & UI
+function buildNavDots() {
+  var navDots = document.getElementById("navDots");
+  if (!navDots) return;
+  navDots.innerHTML = "";
+  if (totalPages <= 12) {
+    for (var i = 0; i < totalPages; i++) {
+      var d = document.createElement("div");
+      d.className = "nav-dot" + (i === 0 ? " active" : "");
+      (function(idx) {
+        d.onclick = function() {
+          if (pageFlip && Date.now() - lastFlipTime > 400) {
+            pageFlip.flip(idx);
+            lastFlipTime = Date.now();
+          }
+        };
+      })(i);
+      navDots.appendChild(d);
+    }
+  } else {
+    navDots.innerHTML = '<span style="color:var(--gold-light);font-size:11px;opacity:0.8">' + totalPages + ' pages</span>';
+  }
+}
+
+function updateUI(cur) {
+  if (!pageFlip) return;
+  if (cur === undefined) cur = pageFlip.getCurrentPageIndex();
+  var dots = document.querySelectorAll(".nav-dot");
+  if (dots.length > 0) {
+    dots.forEach(function(d, i) {
+      d.classList.toggle("active", i === cur);
+    });
+  }
+  var ind = document.getElementById("pageIndicator");
+  if (ind) ind.textContent = "Page " + (cur + 1) + " / " + totalPages;
+  var prev = document.getElementById("prevBtn");
+  var next = document.getElementById("nextBtn");
+  if (prev) prev.disabled = (cur === 0);
+  if (next) next.disabled = (cur === totalPages - 1);
+}
+
+document.getElementById("prevBtn").addEventListener("click", function() {
+  if (pageFlip && Date.now() - lastFlipTime > 400) {
+    var c = pageFlip.getCurrentPageIndex();
+    if (c > 0) pageFlip.flipPrev();
+    lastFlipTime = Date.now();
+  }
+});
+
+document.getElementById("nextBtn").addEventListener("click", function() {
+  if (pageFlip && Date.now() - lastFlipTime > 400) {
+    var c = pageFlip.getCurrentPageIndex();
+    if (c < totalPages - 1) pageFlip.flipNext();
+    lastFlipTime = Date.now();
+  }
+});
+
+// PANIER
+function addToCart(name, price) {
+  var existing = cart.find(function(i) { return i.name === name; });
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({ name: name, price: price, quantity: 1 });
+  }
+  updateCartBadge();
+  showToast(name + " ajouté au panier");
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(function(i) { return i.name !== name; });
+  updateCartBadge();
+  renderCart();
+}
+
+function changeQty(name, delta) {
+  var item = cart.find(function(i) { return i.name === name; });
+  if (item) {
+    item.quantity += delta;
+    if (item.quantity <= 0) removeFromCart(name);
+    renderCart();
+    updateCartBadge();
+  }
+}
+
+function updateCartBadge() {
+  var total = cart.reduce(function(s, i) { return s + i.quantity; }, 0);
+  var badge = document.getElementById("cartBadge");
+  if (badge) badge.textContent = total > 0 ? total : "";
+}
+
+function getTotal() {
+  return cart.reduce(function(s, i) { return s + (i.price * i.quantity); }, 0);
+}
+
+function renderCart() {
+  var container = document.getElementById("cartItems");
+  var totalDiv = document.getElementById("cartTotal");
+  var submitBtn = document.getElementById("submitOrder");
+  
+  if (cart.length === 0) {
+    container.innerHTML = '<div class="cart-empty">Votre panier est vide.<br>Ajoutez des spécialités en cliquant sur le bouton <strong>+</strong>.</div>';
+    totalDiv.style.display = "none";
+    submitBtn.disabled = true;
+    return;
+  }
+  
+  var html = "";
+  cart.forEach(function(item) {
+    html += '<div class="cart-item">' +
+      '<div class="cart-item-info">' +
+        '<h4>' + item.name + '</h4>' +
+        '<span>' + (item.price * item.quantity).toFixed(0) + '$ (' + item.price + '$ x' + item.quantity + ')</span>' +
+      '</div>' +
+      '<div class="cart-qty">' +
+        '<button type="button" onclick="changeQty(\'' + item.name.replace(/'/g, "\\'") + '\', -1)">&minus;</button>' +
+        '<span>' + item.quantity + '</span>' +
+        '<button type="button" onclick="changeQty(\'' + item.name.replace(/'/g, "\\'") + '\', 1)">+</button>' +
+      '</div>' +
+      '<button type="button" class="cart-remove" onclick="removeFromCart(\'' + item.name.replace(/'/g, "\\'") + '\')">&times;</button>' +
+    '</div>';
+  });
+  
+  container.innerHTML = html;
+  totalDiv.style.display = "flex";
+  document.getElementById("totalAmount").textContent = getTotal().toFixed(0) + "$";
+  submitBtn.disabled = false;
+}
+
+function openCart() {
+  renderCart();
+  document.getElementById("cartModal").classList.add("open");
+}
+
+function closeCart() {
+  document.getElementById("cartModal").classList.remove("open");
+}
+
+function showToast(msg) {
+  var t = document.getElementById("toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(function() { t.classList.remove("show"); }, 2800);
+}
+
+// SOUMISSION COMMANDE
+function submitOrder() {
+  if (isSubmitting) return;
+  if (cart.length === 0) return;
+  
+  var table = document.getElementById("tableInput").value.trim();
+  if (!table) {
+    showToast("Veuillez entrer votre numéro de table");
+    return;
+  }
+  
+  var notes = document.getElementById("notesInput").value.trim();
+  var btn = document.getElementById("submitOrder");
+  
+  isSubmitting = true;
+  btn.disabled = true;
+  btn.textContent = "Envoi en cours...";
+
+  var payload = {
+    restaurant_slug: RESTAURANT_SLUG,
+    table_number: table,
+    items: cart,
+    special_notes: notes
+  };
+
+  var apiUrl = (API_BASE ? API_BASE : "") + "/api/submitOrder/";
+
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error("HTTP error " + r.status);
+    return r.json();
+  })
+  .then(function(data) {
+    if (data.success) {
+      cart = [];
+      updateCartBadge();
+      renderCart();
+      closeCart();
+      document.getElementById("tableInput").value = "";
+      document.getElementById("notesInput").value = "";
+      showToast("Commande envoyée ! Total: " + data.total + "$");
+    } else {
+      showToast("Erreur: " + (data.error || "Échec de la commande"));
+    }
+  })
+  .catch(function(err) {
+    console.warn("API réseau indisponible, sauvegarde en LocalStorage:", err);
+    saveOrderLocally(payload);
+  })
+  .finally(function() {
+    isSubmitting = false;
+    btn.disabled = false;
+    btn.textContent = "Envoyer la commande";
+  });
+}
+
+// REPLI LOCALSTORAGE
+function saveOrderLocally(payload) {
+  try {
+    var saved = JSON.parse(localStorage.getItem("millionnaire-commandes") || "[]");
+    payload.created_at = new Date().toISOString();
+    saved.push(payload);
+    localStorage.setItem("millionnaire-commandes", JSON.stringify(saved));
+    
+    cart = [];
+    updateCartBadge();
+    renderCart();
+    closeCart();
+    document.getElementById("tableInput").value = "";
+    document.getElementById("notesInput").value = "";
+    
+    showToast("Hors ligne : commande enregistrée localement");
+  } catch (e) {
+    showToast("Erreur lors de l'enregistrement local");
+  }
+}
+
+// APPEL SERVEUR
+function callWaiter() {
+  if (isCallingWaiter) return;
+  var table = prompt("Votre numéro de table ?");
+  if (!table || !table.trim()) return;
+  
+  isCallingWaiter = true;
+  var payload = {
+    restaurant_slug: RESTAURANT_SLUG,
+    table_number: table.trim()
+  };
+
+  var apiUrl = (API_BASE ? API_BASE : "") + "/api/callWaiter/";
+
+  fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    showToast(data.success ? "Serveur appelé !" : "Erreur: " + (data.error || "Échec"));
+  })
+  .catch(function() {
+    try {
+      var saved = JSON.parse(localStorage.getItem("millionnaire-appels") || "[]");
+      payload.created_at = new Date().toISOString();
+      saved.push(payload);
+      localStorage.setItem("millionnaire-appels", JSON.stringify(saved));
+      showToast("Hors ligne : appel enregistré localement");
+    } catch (e) {
+      showToast("Erreur réseau");
+    }
+  })
+  .finally(function() {
+    isCallingWaiter = false;
+  });
+}
+
+document.getElementById("cartModal").addEventListener("click", function(e) {
+  if (e.target === this) closeCart();
+});
+
+// PARTICULES DORÉES & DEBOUNCE RESIZE
+var canvas = document.getElementById("particles");
+var ctx = canvas.getContext("2d");
+var particles = [];
+var resizeTimeout = null;
+
+function initParticles() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  particles = [];
+  var count = Math.min(60, Math.floor(window.innerWidth / 22));
+  for (var i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2.2 + 0.6,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      opacity: Math.random() * 0.5 + 0.15
+    });
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(function(p) {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(212, 175, 55, " + p.opacity + ")";
+    ctx.fill();
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+initParticles();
+animateParticles();
+
+window.addEventListener("resize", function() {
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function() {
+    initParticles();
+  }, 200);
+});
+
+// INITIALISATION DU BOOK
+initBook();
+</script>
+</body>
+</html>
