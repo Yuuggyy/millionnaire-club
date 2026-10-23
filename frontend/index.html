@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Millionaire Club Kinshasa — Menu Flipbook 3D</title>
@@ -961,37 +964,51 @@ function submitOrder() {
 
   var apiUrl = (API_BASE ? API_BASE : "") + "/api/submitOrder/";
 
-  fetch(apiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(function(r) {
-    if (!r.ok) throw new Error("HTTP error " + r.status);
-    return r.json();
-  })
-  .then(function(data) {
-    if (data.success) {
-      cart = [];
-      updateCartBadge();
-      renderCart();
-      closeCart();
-      document.getElementById("tableInput").value = "";
-      document.getElementById("notesInput").value = "";
-      showToast("Commande envoyée ! Total: " + data.total + "$");
-    } else {
-      showToast("Erreur: " + (data.error || "Échec de la commande"));
-    }
-  })
-  .catch(function(err) {
-    console.warn("API réseau indisponible, sauvegarde en LocalStorage:", err);
-    saveOrderLocally(payload);
-  })
-  .finally(function() {
+  // envoi avec réessais automatiques (connexion mobile) — aucune donnée n'est perdue
+  var essais = 0;
+  var MAX_ESSAIS = 3;
+
+  function terminer() {
     isSubmitting = false;
     btn.disabled = false;
     btn.textContent = "Envoyer la commande";
-  });
+  }
+
+  function envoyer() {
+    fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      if (data.success) {
+        cart = [];
+        updateCartBadge();
+        renderCart();
+        closeCart();
+        document.getElementById("tableInput").value = "";
+        document.getElementById("notesInput").value = "";
+        showToast("Commande envoyée ! Total: " + data.total + "$");
+      } else {
+        showToast("Commande refusée : " + (data.error || "veuillez réessayer"));
+      }
+      terminer();
+    })
+    .catch(function(err) {
+      essais++;
+      if (essais < MAX_ESSAIS) {
+        setTimeout(envoyer, 900);
+      } else {
+        saveOrderLocally(payload);
+        terminer();
+      }
+    });
+  }
+  envoyer();
 }
 
 // REPLI LOCALSTORAGE
@@ -1009,9 +1026,9 @@ function saveOrderLocally(payload) {
     document.getElementById("tableInput").value = "";
     document.getElementById("notesInput").value = "";
     
-    showToast("Hors ligne : commande enregistrée localement");
+    showToast("Connexion faible — commande mise en attente, elle sera transmise");
   } catch (e) {
-    showToast("Erreur lors de l'enregistrement local");
+    showToast("Connexion impossible — veuillez réessayer");
   }
 }
 
@@ -1029,29 +1046,38 @@ function callWaiter() {
 
   var apiUrl = (API_BASE ? API_BASE : "") + "/api/callWaiter/";
 
-  fetch(apiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    showToast(data.success ? "Serveur appelé !" : "Erreur: " + (data.error || "Échec"));
-  })
-  .catch(function() {
-    try {
-      var saved = JSON.parse(localStorage.getItem("millionnaire-appels") || "[]");
-      payload.created_at = new Date().toISOString();
-      saved.push(payload);
-      localStorage.setItem("millionnaire-appels", JSON.stringify(saved));
-      showToast("Hors ligne : appel enregistré localement");
-    } catch (e) {
-      showToast("Erreur réseau");
-    }
-  })
-  .finally(function() {
-    isCallingWaiter = false;
-  });
+  var essaisW = 0;
+
+  function envoyerAppel() {
+    fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      showToast(data.success ? "Serveur appelé !" : "Appel refusé : " + (data.error || "veuillez réessayer"));
+      isCallingWaiter = false;
+    })
+    .catch(function() {
+      essaisW++;
+      if (essaisW < 3) {
+        setTimeout(envoyerAppel, 900);
+      } else {
+        try {
+          var saved = JSON.parse(localStorage.getItem("millionnaire-appels") || "[]");
+          payload.created_at = new Date().toISOString();
+          saved.push(payload);
+          localStorage.setItem("millionnaire-appels", JSON.stringify(saved));
+          showToast("Connexion faible — votre appel sera transmis");
+        } catch (e) {
+          showToast("Connexion impossible — veuillez réessayer");
+        }
+        isCallingWaiter = false;
+      }
+    })
+  }
+  envoyerAppel();
 }
 
 document.getElementById("cartModal").addEventListener("click", function(e) {
