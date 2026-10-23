@@ -667,20 +667,61 @@ function initBook() {
       minHeight: 400,
       maxHeight: 620,
       drawShadow: true,
-      flippingTime: 500,
+      flippingTime: 280,
       usePortrait: true,
       startZIndex: 0,
       autoSize: true,
-      maxShadowOpacity: 0.6,
+      maxShadowOpacity: 0.3,
       showCover: true,
       mobileScrollSupport: false,
-      swipeDistance: 50,
+      swipeDistance: 40,
       clickEventForward: false,
       useMouseEvents: true,
       disableFlipByClick: false
     });
 
     pageFlip.loadFromHTML(items);
+
+// ---- Geste léger : swipe gauche = page suivante, swipe droite = page précédente ----
+(function () {
+  var startX = 0, startY = 0, tracking = false;
+  var container = document.getElementById("book-container") || document;
+  function isUI(t) {
+    return t && t.closest && t.closest("button, a, input, textarea, select, .nav-dots, .cart-modal");
+  }
+  function goNext() { if (pageFlip && Date.now() - lastFlipTime > 350) { pageFlip.flipNext(); lastFlipTime = Date.now(); } }
+  function goPrev() { if (pageFlip && Date.now() - lastFlipTime > 350) { pageFlip.flipPrev(); lastFlipTime = Date.now(); } }
+  container.addEventListener("touchstart", function (e) {
+    if (isUI(e.target)) { tracking = false; return; }
+    tracking = true;
+    var t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+    e.stopPropagation(); // empêche le suivi lourd du moteur, le geste reste vif
+  }, { capture: true });
+  container.addEventListener("touchend", function (e) {
+    if (!tracking) return; tracking = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - startX, dy = t.clientY - startY;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) goNext(); else goPrev();
+    }
+  }, { capture: true });
+  container.addEventListener("mousedown", function (e) {
+    if (isUI(e.target)) { tracking = false; return; }
+    tracking = true;
+    startX = e.clientX; startY = e.clientY;
+    e.stopPropagation();
+  }, true);
+  container.addEventListener("mouseup", function (e) {
+    if (!tracking) return; tracking = false;
+    var dx = e.clientX - startX, dy = e.clientY - startY;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) goNext(); else goPrev();
+    }
+    e.stopPropagation();
+  }, true);
+})();
+
 
     var loadingMsg = document.getElementById("loadingMsg");
     if (loadingMsg) loadingMsg.style.display = "none";
@@ -1026,7 +1067,7 @@ function initParticles() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   particles = [];
-  var count = Math.min(60, Math.floor(window.innerWidth / 22));
+  var count = Math.min(30, Math.floor(window.innerWidth / 40));
   for (var i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * canvas.width,
