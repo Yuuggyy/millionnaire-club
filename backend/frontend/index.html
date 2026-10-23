@@ -637,7 +637,8 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
 <script>
 // CONFIG & STATE
 var RESTAURANT_SLUG = "millionnaire";
-var API_BASE = window.FLIPBOOK_API_BASE || "";
+var API_BASE = window.FLIPBOOK_API_BASE ||
+    (location.hostname.indexOf("pythonanywhere") !== -1 ? "" : "https://mclubkinshasa.pythonanywhere.com");
 var pageFlip = null;
 var totalPages = 9;
 var lastFlipTime = 0;
