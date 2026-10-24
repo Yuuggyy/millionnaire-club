@@ -31,7 +31,7 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path("api/", include("menuapp.urls")),
     re_path(r"^assets/(?P<file_path>.*)$", serve_asset),
-    re_path(r"^(?P<name>favicon\.svg|favicon\.ico|CNAME|page-flip\.browser\.min\.js)$", serve_root_file),
+    re_path(r"^(?P<name>favicon\.svg|favicon\.ico|CNAME|page-flip\.browser\.min\.js|logo-or\.png|logo-filigrane\.png|logo-filigrane-papier\.png|logo-club\.jpg)$", serve_root_file),
     path("admin/", TemplateView.as_view(template_name="dashboard.html"), name="dashboard"),
     path("", TemplateView.as_view(template_name="index.html"), name="menu"),
 ]
