@@ -1104,7 +1104,8 @@ function chargerMenuDynamique(cb) {
       frag.innerHTML = html;
       // insérer les nouvelles pages avant la première page statique, puis retirer les statiques
       var parent = anchor.parentNode;
-      Array.prototype.forEach.call(frag.children, function(node) {
+      var noeuds = Array.prototype.slice.call(frag.children);
+      noeuds.forEach(function(node) {
         parent.insertBefore(node, anchor);
       });
       Array.prototype.forEach.call(statiques, function(node) { node.remove(); });
