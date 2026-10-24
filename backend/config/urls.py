@@ -5,10 +5,6 @@ from django.contrib import admin
 from django.http import FileResponse, Http404
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-<<<<<<< HEAD
-from django.views.static import serve as static_serve
-=======
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 
 
 def serve_asset(request, file_path=""):
@@ -32,14 +28,10 @@ def serve_root_file(request, name):
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("django-admin/", admin.site.urls),
     path("api/", include("menuapp.urls")),
     re_path(r"^assets/(?P<file_path>.*)$", serve_asset),
-<<<<<<< HEAD
-    re_path(r"^(?P<name>favicon\.svg|favicon\.ico|CNAME|page-flip\.browser\.min\.js|logo-club\.jpg|logo-filigrane\.png|logo-or\.png|logo-filigrane-papier\.png)$", serve_root_file),
-    re_path(r"^static/(?P<path>.*)$", static_serve, {"document_root": settings.STATIC_ROOT}),
-=======
     re_path(r"^(?P<name>favicon\.svg|favicon\.ico|CNAME|page-flip\.browser\.min\.js)$", serve_root_file),
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
+    path("admin/", TemplateView.as_view(template_name="dashboard.html"), name="dashboard"),
     path("", TemplateView.as_view(template_name="index.html"), name="menu"),
 ]

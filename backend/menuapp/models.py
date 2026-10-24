@@ -39,3 +39,39 @@ class AppelServeur(models.Model):
 
     def __str__(self):
         return f"Table {self.numero_table} — {'traité' if self.traite else 'en attente'}"
+
+
+class Categorie(models.Model):
+    """Catégorie du menu (une page du flipbook)."""
+    restaurant_slug = models.CharField(max_length=50, default="millionnaire")
+    nom = models.CharField(max_length=100)
+    ordre = models.IntegerField(default=10)
+    actif = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["ordre", "id"]
+
+    def __str__(self):
+        return self.nom
+
+
+class Produit(models.Model):
+    """Plat ou boisson du menu."""
+    categorie = models.ForeignKey(Categorie, related_name="plats", on_delete=models.CASCADE)
+    nom = models.CharField(max_length=200)
+    description = models.CharField(max_length=300, blank=True, default="")
+    prix = models.FloatField(default=0)
+    ordre = models.IntegerField(default=10)
+    disponible = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["ordre", "id"]
+
+    def __str__(self):
+        return f"{self.nom} ({self.prix}$)"
+
+
+class Parametre(models.Model):
+    """Réglage clé/valeur du site du club."""
+    cle = models.CharField(max_length=60, unique=True)
+    valeur = models.TextField(blank=True, default="")

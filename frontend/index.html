@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<<<<<<< HEAD
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-=======
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Millionaire Club Kinshasa — Menu Flipbook 3D</title>
@@ -182,7 +176,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 2: SIGNATURES DU CLUB -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Signatures du Club</h2>
@@ -238,7 +232,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 3: GRILLADES & VIANDES -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Grillades & Viandes</h2>
@@ -294,7 +288,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 4: FRUITS DE MER & TAPAS -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Fruits de Mer & Tapas</h2>
@@ -350,7 +344,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 5: COCKTAILS SIGNATURES -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Cocktails Signatures</h2>
@@ -406,7 +400,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 6: CHAMPAGNES & SPIRITUEUX -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Champagnes & Spiritueux</h2>
@@ -472,7 +466,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 7: BOISSONS & SOFTS VIP -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Boissons & Softs VIP</h2>
@@ -528,7 +522,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
     </div>
 
     <!-- PAGE 8: DESSERTS PRESTIGE -->
-    <div class="page-item">
+    <div class="page-item" data-page-menu="1">
       <div class="page-menu">
         <div class="menu-header">
           <h2>Desserts Prestige</h2>
@@ -643,12 +637,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
 <script>
 // CONFIG & STATE
 var RESTAURANT_SLUG = "millionnaire";
-<<<<<<< HEAD
-var API_BASE = window.FLIPBOOK_API_BASE ||
-    (location.hostname.indexOf("pythonanywhere") !== -1 ? "" : "https://mclubkinshasa.pythonanywhere.com");
-=======
 var API_BASE = window.FLIPBOOK_API_BASE || "";
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 var pageFlip = null;
 var totalPages = 9;
 var lastFlipTime = 0;
@@ -678,16 +667,6 @@ function initBook() {
       minHeight: 400,
       maxHeight: 620,
       drawShadow: true,
-<<<<<<< HEAD
-      flippingTime: 280,
-      usePortrait: true,
-      startZIndex: 0,
-      autoSize: true,
-      maxShadowOpacity: 0.3,
-      showCover: true,
-      mobileScrollSupport: false,
-      swipeDistance: 40,
-=======
       flippingTime: 500,
       usePortrait: true,
       startZIndex: 0,
@@ -696,7 +675,6 @@ function initBook() {
       showCover: true,
       mobileScrollSupport: false,
       swipeDistance: 50,
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
       clickEventForward: false,
       useMouseEvents: true,
       disableFlipByClick: false
@@ -704,50 +682,6 @@ function initBook() {
 
     pageFlip.loadFromHTML(items);
 
-<<<<<<< HEAD
-// ---- Geste léger : swipe gauche = page suivante, swipe droite = page précédente ----
-(function () {
-  var startX = 0, startY = 0, tracking = false;
-  var container = document.getElementById("book-container") || document;
-  function isUI(t) {
-    return t && t.closest && t.closest("button, a, input, textarea, select, .nav-dots, .cart-modal");
-  }
-  function goNext() { if (pageFlip && Date.now() - lastFlipTime > 350) { pageFlip.flipNext(); lastFlipTime = Date.now(); } }
-  function goPrev() { if (pageFlip && Date.now() - lastFlipTime > 350) { pageFlip.flipPrev(); lastFlipTime = Date.now(); } }
-  container.addEventListener("touchstart", function (e) {
-    if (isUI(e.target)) { tracking = false; return; }
-    tracking = true;
-    var t = e.touches[0];
-    startX = t.clientX; startY = t.clientY;
-    e.stopPropagation(); // empêche le suivi lourd du moteur, le geste reste vif
-  }, { capture: true });
-  container.addEventListener("touchend", function (e) {
-    if (!tracking) return; tracking = false;
-    var t = e.changedTouches[0];
-    var dx = t.clientX - startX, dy = t.clientY - startY;
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx < 0) goNext(); else goPrev();
-    }
-  }, { capture: true });
-  container.addEventListener("mousedown", function (e) {
-    if (isUI(e.target)) { tracking = false; return; }
-    tracking = true;
-    startX = e.clientX; startY = e.clientY;
-    e.stopPropagation();
-  }, true);
-  container.addEventListener("mouseup", function (e) {
-    if (!tracking) return; tracking = false;
-    var dx = e.clientX - startX, dy = e.clientY - startY;
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx < 0) goNext(); else goPrev();
-    }
-    e.stopPropagation();
-  }, true);
-})();
-
-
-=======
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
     var loadingMsg = document.getElementById("loadingMsg");
     if (loadingMsg) loadingMsg.style.display = "none";
     document.getElementById("book-container").style.display = "flex";
@@ -985,53 +919,6 @@ function submitOrder() {
 
   var apiUrl = (API_BASE ? API_BASE : "") + "/api/submitOrder/";
 
-<<<<<<< HEAD
-  // envoi avec réessais automatiques (connexion mobile) — aucune donnée n'est perdue
-  var essais = 0;
-  var MAX_ESSAIS = 3;
-
-  function terminer() {
-    isSubmitting = false;
-    btn.disabled = false;
-    btn.textContent = "Envoyer la commande";
-  }
-
-  function envoyer() {
-    fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(function(r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.json();
-    })
-    .then(function(data) {
-      if (data.success) {
-        cart = [];
-        updateCartBadge();
-        renderCart();
-        closeCart();
-        document.getElementById("tableInput").value = "";
-        document.getElementById("notesInput").value = "";
-        showToast("Commande envoyée ! Total: " + data.total + "$");
-      } else {
-        showToast("Commande refusée : " + (data.error || "veuillez réessayer"));
-      }
-      terminer();
-    })
-    .catch(function(err) {
-      essais++;
-      if (essais < MAX_ESSAIS) {
-        setTimeout(envoyer, 900);
-      } else {
-        saveOrderLocally(payload);
-        terminer();
-      }
-    });
-  }
-  envoyer();
-=======
   fetch(apiUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1063,7 +950,6 @@ function submitOrder() {
     btn.disabled = false;
     btn.textContent = "Envoyer la commande";
   });
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 }
 
 // REPLI LOCALSTORAGE
@@ -1081,15 +967,9 @@ function saveOrderLocally(payload) {
     document.getElementById("tableInput").value = "";
     document.getElementById("notesInput").value = "";
     
-<<<<<<< HEAD
-    showToast("Connexion faible — commande mise en attente, elle sera transmise");
-  } catch (e) {
-    showToast("Connexion impossible — veuillez réessayer");
-=======
     showToast("Hors ligne : commande enregistrée localement");
   } catch (e) {
     showToast("Erreur lors de l'enregistrement local");
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
   }
 }
 
@@ -1107,40 +987,6 @@ function callWaiter() {
 
   var apiUrl = (API_BASE ? API_BASE : "") + "/api/callWaiter/";
 
-<<<<<<< HEAD
-  var essaisW = 0;
-
-  function envoyerAppel() {
-    fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      showToast(data.success ? "Serveur appelé !" : "Appel refusé : " + (data.error || "veuillez réessayer"));
-      isCallingWaiter = false;
-    })
-    .catch(function() {
-      essaisW++;
-      if (essaisW < 3) {
-        setTimeout(envoyerAppel, 900);
-      } else {
-        try {
-          var saved = JSON.parse(localStorage.getItem("millionnaire-appels") || "[]");
-          payload.created_at = new Date().toISOString();
-          saved.push(payload);
-          localStorage.setItem("millionnaire-appels", JSON.stringify(saved));
-          showToast("Connexion faible — votre appel sera transmis");
-        } catch (e) {
-          showToast("Connexion impossible — veuillez réessayer");
-        }
-        isCallingWaiter = false;
-      }
-    })
-  }
-  envoyerAppel();
-=======
   fetch(apiUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1164,7 +1010,6 @@ function callWaiter() {
   .finally(function() {
     isCallingWaiter = false;
   });
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
 }
 
 document.getElementById("cartModal").addEventListener("click", function(e) {
@@ -1181,11 +1026,7 @@ function initParticles() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   particles = [];
-<<<<<<< HEAD
-  var count = Math.min(30, Math.floor(window.innerWidth / 40));
-=======
   var count = Math.min(60, Math.floor(window.innerWidth / 22));
->>>>>>> aeacd5e (Logo officiel du club : filigrane doré sur le papier du menu + logo en couverture (design épuré))
   for (var i = 0; i < count; i++) {
     particles.push({
       x: Math.random() * canvas.width,
@@ -1223,8 +1064,57 @@ window.addEventListener("resize", function() {
   }, 200);
 });
 
+// MENU DYNAMIQUE : les plats viennent de la base (panel admin).
+// Repli : si l'API est indisponible, on garde les pages statiques du livre.
+var API_BASE = (location.hostname.indexOf("pythonanywhere") !== -1) ? "" : "https://mclubkinshasa.pythonanywhere.com";
+
+function esc(t) {
+  var d = document.createElement("div");
+  d.textContent = t == null ? "" : String(t);
+  return d.innerHTML;
+}
+
+function buildMenuPage(cat) {
+  var items = "";
+  (cat.plats || []).forEach(function(p) {
+    items += '<div class="menu-item" data-name="' + esc(p.nom) + '" data-price="' + p.prix + '">' +
+      '<div class="menu-item-info"><h3>' + esc(p.nom) + '</h3><p>' + esc(p.description) + '</p></div>' +
+      '<div class="menu-item-right"><div class="menu-item-price">' + p.prix + '$</div>' +
+      '<div class="add-btn-placeholder"></div></div></div>';
+  });
+  return '<div class="page-item"><div class="page-menu">' +
+    '<div class="menu-header"><h2>' + esc(cat.nom) + '</h2><div class="category-line"></div></div>' +
+    '<div class="menu-items-list">' + items + '</div>' +
+    '<div class="page-footer"><span>Millionaire Club Kinshasa</span>' +
+    '<a href="tel:+243977555768">Inspire by YuuStore</a></div></div></div>';
+}
+
+function chargerMenuDynamique(cb) {
+  fetch((API_BASE ? API_BASE : "") + "/api/menu/", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.success || !data.categories || data.categories.length === 0) return cb();
+      var book = document.getElementById("book");
+      var statiques = book.querySelectorAll("[data-page-menu]");
+      if (statiques.length === 0) return cb();
+      var anchor = statiques[0];
+      var frag = document.createElement("div");
+      var html = "";
+      data.categories.forEach(function(cat) { html += buildMenuPage(cat); });
+      frag.innerHTML = html;
+      // insérer les nouvelles pages avant la première page statique, puis retirer les statiques
+      var parent = anchor.parentNode;
+      Array.prototype.forEach.call(frag.children, function(node) {
+        parent.insertBefore(node, anchor);
+      });
+      Array.prototype.forEach.call(statiques, function(node) { node.remove(); });
+      cb();
+    })
+    .catch(function() { cb(); });
+}
+
 // INITIALISATION DU BOOK
-initBook();
+chargerMenuDynamique(initBook);
 </script>
 </body>
 </html>

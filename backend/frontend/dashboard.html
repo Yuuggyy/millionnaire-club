@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Administration — Millionaire Club Kinshasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--or:#D4AF37;--or-clair:#F0D98C;--noir:#0D0D0D;--noir2:#161616;--carte:#1C1A14;--txt:#F5EFDC;--gris:#9C927B;--ok:#2ECC71;--att:#F39C12;--danger:#E74C3C;--bord:rgba(212,175,55,.28)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:radial-gradient(ellipse at top,#231c08 0%,var(--noir) 70%);color:var(--txt);min-height:100vh}
+h1,h2,h3{font-family:'Playfair Display',serif}
+.or{color:var(--or)}
+/* ---------- LOGIN ---------- */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:400px;background:var(--carte);border:1px solid var(--bord);border-radius:18px;padding:38px 30px;text-align:center}
+.logo-m{width:76px;height:76px;border-radius:50%;margin:0 auto 18px;background:linear-gradient(135deg,var(--or),var(--or-clair));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:40px;font-weight:800;color:#1a1200;box-shadow:0 8px 30px rgba(212,175,55,.35)}
+.login-card h1{font-size:26px;letter-spacing:.03em}
+.login-card .sous{color:var(--or);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin:6px 0 28px}
+.champ{text-align:left;margin-bottom:16px}
+.champ label{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);margin-bottom:7px}
+.champ input,.champ select,.champ textarea{width:100%;background:#0F0E09;border:1px solid var(--bord);border-radius:10px;padding:12px 14px;color:var(--txt);font-size:15px;font-family:'Inter',sans-serif}
+.champ input:focus,.champ select:focus,.champ textarea:focus{outline:none;border-color:var(--or)}
+.btn-or{width:100%;background:linear-gradient(135deg,var(--or),#B8962E);color:#1a1200;border:none;border-radius:10px;padding:13px;font-weight:700;font-size:15px;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-or:disabled{opacity:.55;cursor:default}
+.err{color:#ff8f8f;font-size:13px;margin-top:12px;min-height:18px}
+/* ---------- APP ---------- */
+#app{display:none;max-width:1080px;margin:0 auto;padding:22px 16px 60px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 18px;border-bottom:1px solid var(--bord);margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .logo-m{width:46px;height:46px;font-size:24px;margin:0;box-shadow:none}
+.brand h1{font-size:20px;line-height:1.1}
+.brand small{display:block;color:var(--or);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-family:'Inter',sans-serif;margin-top:3px}
+.btn-sortie{background:none;border:1px solid var(--bord);color:var(--gris);border-radius:99px;padding:8px 16px;font-size:12.5px;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-sortie:hover{color:var(--txt);border-color:var(--or)}
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tab{background:var(--carte);border:1px solid transparent;color:var(--gris);border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:8px}
+.tab.on{color:var(--or);border-color:var(--bord);background:linear-gradient(180deg,rgba(212,175,55,.10),rgba(212,175,55,.02))}
+.badge{background:var(--danger);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 8px;min-width:20px;text-align:center}
+.badge.zero{background:#3a3427;color:var(--gris)}
+/* ---------- CARTES ---------- */
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.carte{background:var(--carte);border:1px solid var(--bord);border-radius:14px;padding:16px}
+.carte .t-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.carte .table{font-weight:800;font-size:16px}
+.carte .heure{color:var(--gris);font-size:12px}
+.statut{display:inline-block;border-radius:99px;padding:3px 11px;font-size:11.5px;font-weight:700}
+.st-recue{background:rgba(63,156,245,.15);color:#7dbbf7}
+.st-en_cours{background:rgba(243,156,18,.18);color:#f5b04d}
+.st-terminee{background:rgba(46,204,113,.15);color:#7fd9a3}
+.st-annulee{background:rgba(231,76,60,.15);color:#f0968b}
+.carte ul{list-style:none;margin:8px 0 8px}
+.carte li{padding:5px 0;border-bottom:1px dashed rgba(212,175,55,.12);font-size:14px;display:flex;justify-content:space-between}
+.carte li .q{color:var(--gris)}
+.carte .notes{font-size:12.5px;color:var(--gris);font-style:italic;margin:6px 0}
+.carte .total{font-family:'Playfair Display',serif;font-size:20px;color:var(--or);margin:8px 0 12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:none;border-radius:9px;padding:9px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-p{background:var(--or);color:#1a1200}
+.btn-p:hover{background:var(--or-clair)}
+.btn-s{background:none;border:1px solid var(--bord);color:var(--txt)}
+.btn-d{background:none;border:1px solid rgba(231,76,60,.4);color:#f0968b}
+.btn-d:hover{background:rgba(231,76,60,.12)}
+.vide{color:var(--gris);text-align:center;padding:50px 10px;font-size:14px}
+/* ---------- MENU TAB ---------- */
+.cat-bloc{margin-bottom:26px}
+.cat-titre{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.cat-titre h3{font-size:19px;color:var(--or-clair)}
+.ligne{flex:1;border-top:1px dashed var(--bord)}
+.plat{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--carte);border:1px solid var(--bord);border-radius:11px;padding:12px 15px;margin-bottom:8px;flex-wrap:wrap}
+.plat .p-info{flex:1;min-width:180px}
+.plat .p-nom{font-weight:600;font-size:14.5px}
+.plat .p-desc{color:var(--gris);font-size:12.5px;margin-top:2px}
+.plat .p-prix{font-family:'Playfair Display',serif;color:var(--or);font-size:17px;white-space:nowrap}
+.epuise{opacity:.5;text-decoration:line-through}
+.bnt-ajout{margin:6px 0 18px}
+/* ---------- MODAL ---------- */
+#modal-fond{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:18px}
+#modal-fond.on{display:flex}
+#modal{background:var(--noir2);border:1px solid var(--bord);border-radius:16px;width:100%;max-width:430px;padding:26px;max-height:90vh;overflow:auto}
+#modal h3{color:var(--or);font-size:19px;margin-bottom:18px}
+.m-actions{display:flex;gap:10px;margin-top:20px}
+.m-actions .btn{flex:1;padding:12px}
+.check{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--gris);margin:4px 0 12px}
+.check input{width:16px;height:16px;accent-color:var(--or)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--or);color:#1a1200;font-weight:700;border-radius:99px;padding:10px 22px;font-size:13.5px;opacity:0;transition:.3s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+.filtres{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.filtre{border:1px solid var(--bord);background:none;color:var(--gris);border-radius:99px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif}
+.filtre.on{color:var(--or);border-color:var(--or)}
+@media(max-width:640px){.grille{grid-template-columns:1fr}.carte .t-top{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<!-- ============ CONNEXION ============ -->
+<div id="login">
+  <div class="login-card">
+    <div class="logo-m">M</div>
+    <h1>Millionaire Club</h1>
+    <p class="sous">Espace Administration</p>
+    <form id="form-login">
+      <div class="champ"><label>Email</label><input type="email" id="l-email" required autofocus></div>
+      <div class="champ"><label>Mot de passe</label><input type="password" id="l-pwd" required></div>
+      <p class="err" id="l-err"></p>
+      <button class="btn-or" type="submit" id="l-btn">Se connecter</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APPLICATION ============ -->
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo-m">M</div>
+      <div><h1>Millionaire Club</h1><small>Administration</small></div>
+    </div>
+    <button class="btn-sortie" onclick="deconnexion()">Déconnexion</button>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab on" data-tab="commandes" onclick="onglet('commandes')">📋 Commandes <span class="badge zero" id="b-cmd">0</span></button>
+    <button class="tab" data-tab="appels" onclick="onglet('appels')">🔔 Appels Serveur <span class="badge zero" id="b-app">0</span></button>
+    <button class="tab" data-tab="menu" onclick="onglet('menu')">🍽️ Menu</button>
+    <button class="tab" data-tab="reglages" onclick="onglet('reglages')">⚙️ Réglages</button>
+  </nav>
+
+  <!-- COMMANDES -->
+  <section id="tab-commandes">
+    <div class="filtres">
+      <button class="filtre on" data-f="tous" onclick="filtreStatut('tous',this)">Tous</button>
+      <button class="filtre" data-f="recue" onclick="filtreStatut('recue',this)">📬 Reçues</button>
+      <button class="filtre" data-f="en_cours" onclick="filtreStatut('en_cours',this)">🔥 En cours</button>
+      <button class="filtre" data-f="terminee" onclick="filtreStatut('terminee',this)">✅ Terminées</button>
+    </div>
+    <div class="grille" id="liste-commandes"></div>
+  </section>
+
+  <!-- APPELS -->
+  <section id="tab-appels" style="display:none">
+    <div class="filtres">
+      <button class="filtre on" onclick="filtreAppels(true,this)">⏳ En attente</button>
+      <button class="filtre" onclick="filtreAppels(false,this)">Traités</button>
+    </div>
+    <div class="grille" id="liste-appels"></div>
+  </section>
+
+  <!-- MENU -->
+  <section id="tab-menu" style="display:none">
+    <button class="btn btn-p bnt-ajout" onclick="editerCategorie()">+ Nouvelle catégorie</button>
+    <button class="btn btn-s bnt-ajout" onclick="editerProduit()">+ Nouveau plat</button>
+    <div id="liste-menu"></div>
+  </section>
+
+  <!-- REGLAGES -->
+  <section id="tab-reglages" style="display:none">
+    <button class="btn btn-s bnt-ajout" onclick="editerParametre()">+ Nouveau réglage</button>
+    <div id="liste-reglages"></div>
+  </section>
+</div>
+
+<!-- MODAL -->
+<div id="modal-fond" onclick="if(event.target===this)fermerModal()">
+  <div id="modal"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var API = (location.hostname.indexOf("pythonanywhere") !== -1) ? "" : "https://mclubkinshasa.pythonanywhere.com";
+var TOKEN = localStorage.getItem("mclub-admin-token") || "";
+var commandeData = [], appelData = [], filtreCourant = "tous", appelsAttente = true, minuteur = null;
+
+var STATUTS = {recue:"📬 Reçue", en_cours:"🔥 En cours", terminee:"✅ Terminée", annulee:"❌ Annulée"};
+var SUIVANT = {recue:"en_cours", en_cours:"terminee"};
+
+function api(chemin, corps) {
+  return fetch(API + "/api/" + chemin, {
+    method: "POST",
+    headers: {"Content-Type": "application/json", "X-Admin-Token": TOKEN},
+    body: JSON.stringify(corps || {})
+  }).then(function(r) { return r.json(); });
+}
+function esc(t) { var d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; }
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(function() { t.classList.remove("show"); }, 2400);
+}
+
+/* ---------- CONNEXION ---------- */
+document.getElementById("form-login").addEventListener("submit", function(e) {
+  e.preventDefault();
+  var btn = document.getElementById("l-btn");
+  btn.disabled = true; btn.textContent = "Connexion…";
+  fetch(API + "/api/admin/login/", {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({email: document.getElementById("l-email").value.trim(), password: document.getElementById("l-pwd").value})
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    btn.disabled = false; btn.textContent = "Se connecter";
+    if (d.success) { TOKEN = d.token; localStorage.setItem("mclub-admin-token", TOKEN); ouvrirApp(); }
+    else { document.getElementById("l-err").textContent = "⚠️ " + (d.error || "Identifiants incorrects"); }
+  }).catch(function() {
+    btn.disabled = false; btn.textContent = "Se connecter";
+    document.getElementById("l-err").textContent = "⚠️ Serveur injoignable";
+  });
+});
+
+function ouvrirApp() {
+  document.getElementById("login").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  rafraichir();
+  clearInterval(minuteur);
+  minuteur = setInterval(rafraichir, 6000);
+}
+function deconnexion() {
+  localStorage.removeItem("mclub-admin-token"); TOKEN = "";
+  location.reload();
+}
+function onglet(nom) {
+  document.querySelectorAll(".tab").forEach(function(t) { t.classList.toggle("on", t.dataset.tab === nom); });
+  ["commandes", "appels", "menu", "reglages"].forEach(function(t) {
+    document.getElementById("tab-" + t).style.display = (t === nom) ? "block" : "none";
+  });
+  if (nom === "menu") chargerMenuAdmin();
+  if (nom === "reglages") chargerReglages();
+}
+
+/* ---------- RAFRAÎCHISSEMENT ---------- */
+function rafraichir() {
+  api("admin/stats/").then(function(d) {
+    if (!d.success && d.error === "Non autorisé") { deconnexion(); return; }
+    var bc = document.getElementById("b-cmd"), ba = document.getElementById("b-app");
+    bc.textContent = d.commandes_actives || 0;
+    ba.textContent = d.appels_en_attente || 0;
+    bc.classList.toggle("zero", !(d.commandes_actives > 0));
+    ba.classList.toggle("zero", !(d.appels_en_attente > 0));
+  });
+  api("admin/commandes/").then(function(d) { if (d.success) { commandeData = d.commandes || []; afficherCommandes(); } });
+  api("admin/appels/").then(function(d) { if (d.success) { appelData = d.appels || []; afficherAppels(); } });
+}
+
+/* ---------- COMMANDES ---------- */
+function filtreStatut(f, btn) {
+  filtreCourant = f;
+  document.querySelectorAll("#tab-commandes .filtre").forEach(function(b) { b.classList.remove("on"); });
+  btn.classList.add("on");
+  afficherCommandes();
+}
+function afficherCommandes() {
+  var el = document.getElementById("liste-commandes");
+  var liste = commandeData.filter(function(c) { return filtreCourant === "tous" || c.statut === filtreCourant; });
+  if (liste.length === 0) { el.innerHTML = '<div class="vide">Aucune commande pour le moment.</div>'; return; }
+  el.innerHTML = liste.map(function(c) {
+    var items = (c.items || []).map(function(i) {
+      return "<li><span>" + esc(i.nom) + ' <span class="q">x' + i.qte + "</span></span><span>" + (i.prix * i.qte).toFixed(0) + "$</span></li>";
+    }).join("");
+    var notes = c.notes ? '<div class="notes">✍️ ' + esc(c.notes) + "</div>" : "";
+    var boutons = "";
+    if (SUIVANT[c.statut]) boutons += '<button class="btn btn-p" onclick="changerStatut(' + c.id + ',\'' + SUIVANT[c.statut] + '\')">' + (c.statut === "recue" ? "🔥 Prendre en charge" : "✅ Terminer") + "</button>";
+    if (c.statut !== "annulee" && c.statut !== "terminee") boutons += '<button class="btn btn-d" onclick="changerStatut(' + c.id + ',\'annulee\')">Annuler</button>';
+    boutons += '<button class="btn btn-d" onclick="supprimerCommande(' + c.id + ')">🗑️</button>';
+    return '<div class="carte">' +
+      '<div class="t-top"><span class="table">🪑 Table ' + esc(c.table) + '</span><span class="statut st-' + c.statut + '">' + STATUTS[c.statut] + "</span></div>" +
+      "<div class='heure'>" + esc(c.created_at) + "</div><ul>" + items + "</ul>" + notes +
+      '<div class="total">' + c.total.toFixed(0) + "$</div><div class='actions'>" + boutons + "</div></div>";
+  }).join("");
+}
+function changerStatut(id, statut) {
+  api("admin/commande/statut/", {id: id, statut: statut}).then(function(d) {
+    if (d.success) { toast(STATUTS[statut] + " ✓"); rafraichir(); } else toast(d.error || "Échec");
+  });
+}
+function supprimerCommande(id) {
+  if (!confirm("Supprimer définitivement cette commande ?")) return;
+  api("admin/commande/delete/", {id: id}).then(function() { toast("Commande supprimée"); rafraichir(); });
+}
+
+/* ---------- APPELS ---------- */
+function filtreAppels(attente, btn) {
+  appelsAttente = attente;
+  document.querySelectorAll("#tab-appels .filtre").forEach(function(b) { b.classList.remove("on"); });
+  btn.classList.add("on");
+  afficherAppels();
+}
+function afficherAppels() {
+  var el = document.getElementById("liste-appels");
+  var liste = appelData.filter(function(a) { return appelsAttente ? !a.traite : a.traite; });
+  if (liste.length === 0) { el.innerHTML = '<div class="vide">' + (appelsAttente ? "Aucun appel en attente." : "Aucun appel traité.") + "</div>"; return; }
+  el.innerHTML = liste.map(function(a) {
+    var action = a.traite
+      ? '<button class="btn btn-s" onclick="traiterAppel(' + a.id + ',false)">↩️ Réouvrir</button>'
+      : '<button class="btn btn-p" onclick="traiterAppel(' + a.id + ',true)">✅ Marquer traité</button>';
+    return '<div class="carte"><div class="t-top"><span class="table">🪔 Table ' + esc(a.table) + "</span>" +
+      '<span class="statut st-' + (a.traite ? "terminee" : "en_cours") + '">' + (a.traite ? "✅ Traité" : "⏳ En attente") + "</span></div>" +
+      "<div class='heure'>" + esc(a.created_at) + "</div><div class='actions' style='margin-top:10px'>" + action + "</div></div>";
+  }).join("");
+}
+function traiterAppel(id, traite) {
+  api("admin/appel/traiter/", {id: id, traite: traite}).then(function() { toast(traite ? "Appel traité ✓" : "Appel réouvert"); rafraichir(); });
+}
+
+/* ---------- MENU (catégories & plats) ---------- */
+function chargerMenuAdmin() {
+  Promise.all([api("admin/categories/"), api("admin/produits/")]).then(function(res) {
+    var cats = res[0].categories || [], plats = res[1].produits || [];
+    var el = document.getElementById("liste-menu");
+    if (cats.length === 0) { el.innerHTML = '<div class="vide">Aucune catégorie.</div>'; return; }
+    el.innerHTML = cats.map(function(c) {
+      var mesPlats = plats.filter(function(p) { return p.categorie_id === c.id; });
+      var html = '<div class="cat-bloc"><div class="cat-titre"><h3>' + esc(c.nom) + "</h3><span class='ligne'></span>" +
+        '<button class="btn btn-s" onclick="editerCategorie(' + c.id + ')">✏️</button>' +
+        '<button class="btn btn-d" onclick="supprimerCategorie(' + c.id + ')">🗑️</button></div>';
+      if (mesPlats.length === 0) html += '<div class="vide" style="padding:14px">Aucun plat — ajoutez-en un.</div>';
+      else html += mesPlats.map(function(p) {
+        return '<div class="plat' + (p.disponible ? "" : " epuise") + '"><div class="p-info"><div class="p-nom">' + esc(p.nom) + "</div>" +
+          '<div class="p-desc">' + esc(p.description) + "</div></div><span class='p-prix'>" + p.prix.toFixed(0) + "$</span>" +
+          '<button class="btn btn-s" onclick="editerProduit(' + p.id + ')">✏️</button>' +
+          '<button class="btn btn-d" onclick="supprimerProduit(' + p.id + ')">🗑️</button></div>';
+      }).join("");
+      html += '<button class="btn btn-s" onclick="editerProduit(null,' + c.id + ')">+ Ajouter un plat ici</button></div>';
+      return html;
+    }).join("");
+  });
+}
+function modal(html) { document.getElementById("modal").innerHTML = html; document.getElementById("modal-fond").classList.add("on"); }
+function fermerModal() { document.getElementById("modal-fond").classList.remove("on"); }
+
+function editerCategorie(id) {
+  var c = null;
+  if (id) { api("admin/categories/").then(function(d) { c = (d.categories || []).find(function(x) { return x.id === id; }); formCat(c); }); }
+  else formCat(null);
+  function formCat(c) {
+    modal("<h3>" + (c ? "Modifier la catégorie" : "Nouvelle catégorie") + "</h3>" +
+      '<div class="champ"><label>Nom</label><input id="c-nom" value="' + (c ? esc(c.nom) : "") + '"></div>' +
+      '<div class="champ"><label>Ordre d\'affichage</label><input id="c-ordre" type="number" value="' + (c ? c.ordre : 10) + '"></div>' +
+      '<label class="check"><input type="checkbox" id="c-actif" ' + (!c || c.actif ? "checked" : "") + "> Visible dans le menu</label>" +
+      '<div class="m-actions"><button class="btn btn-s" onclick="fermerModal()">Annuler</button>' +
+      '<button class="btn btn-p" onclick="sauverCategorie(' + (c ? c.id : "null") + ')">Enregistrer</button></div>');
+  }
+}
+function sauverCategorie(id) {
+  api("admin/categorie/save/", {
+    id: id, nom: document.getElementById("c-nom").value,
+    ordre: parseInt(document.getElementById("c-ordre").value) || 10,
+    actif: document.getElementById("c-actif").checked
+  }).then(function(d) {
+    if (d.success) { fermerModal(); toast("Catégorie enregistrée ✓"); chargerMenuAdmin(); }
+    else toast(d.error || "Échec");
+  });
+}
+function supprimerCategorie(id) {
+  if (!confirm("Supprimer cette catégorie et tous ses plats ?")) return;
+  api("admin/categorie/delete/", {id: id}).then(function() { toast("Catégorie supprimée"); chargerMenuAdmin(); });
+}
+
+function editerProduit(id, catId) {
+  var formPlat = function(p, cats) {
+    var opts = cats.map(function(c) {
+      return '<option value="' + c.id + '"' + ((p ? p.categorie_id : catId) === c.id ? " selected" : "") + ">" + esc(c.nom) + "</option>";
+    }).join("");
+    modal("<h3>" + (p ? "Modifier le plat" : "Nouveau plat") + "</h3>" +
+      '<div class="champ"><label>Catégorie</label><select id="p-cat">' + opts + "</select></div>" +
+      '<div class="champ"><label>Nom du plat</label><input id="p-nom" value="' + (p ? esc(p.nom) : "") + '"></div>' +
+      '<div class="champ"><label>Description</label><textarea id="p-desc" rows="2">' + (p ? esc(p.description) : "") + "</textarea></div>" +
+      '<div class="champ"><label>Prix ($)</label><input id="p-prix" type="number" step="0.5" value="' + (p ? p.prix : "") + '"></div>' +
+      '<div class="champ"><label>Ordre</label><input id="p-ordre" type="number" value="' + (p ? p.ordre : 10) + '"></div>' +
+      '<label class="check"><input type="checkbox" id="p-dispo" ' + (!p || p.disponible ? "checked" : "") + "> Disponible</label>" +
+      '<div class="m-actions"><button class="btn btn-s" onclick="fermerModal()">Annuler</button>' +
+      '<button class="btn btn-p" onclick="sauverProduit(' + (p ? p.id : "null") + ')">Enregistrer</button></div>');
+  };
+  if (id) {
+    Promise.all([api("admin/produits/"), api("admin/categories/")]).then(function(r) {
+      formPlat((r[0].produits || []).find(function(x) { return x.id === id; }), r[1].categories || []);
+    });
+  } else {
+    api("admin/categories/").then(function(d) { formPlat(null, d.categories || []); });
+  }
+}
+function sauverProduit(id) {
+  api("admin/produit/save/", {
+    id: id,
+    categorie_id: parseInt(document.getElementById("p-cat").value),
+    nom: document.getElementById("p-nom").value,
+    description: document.getElementById("p-desc").value,
+    prix: parseFloat(document.getElementById("p-prix").value) || 0,
+    ordre: parseInt(document.getElementById("p-ordre").value) || 10,
+    disponible: document.getElementById("p-dispo").checked
+  }).then(function(d) {
+    if (d.success) { fermerModal(); toast("Plat enregistré ✓"); chargerMenuAdmin(); }
+    else toast(d.error || "Échec");
+  });
+}
+function supprimerProduit(id) {
+  if (!confirm("Supprimer ce plat ?")) return;
+  api("admin/produit/delete/", {id: id}).then(function() { toast("Plat supprimé"); chargerMenuAdmin(); });
+}
+
+/* ---------- REGLAGES ---------- */
+function chargerReglages() {
+  api("admin/parametres/").then(function(d) {
+    var el = document.getElementById("liste-reglages");
+    var params = d.parametres || [];
+    if (params.length === 0) { el.innerHTML = '<div class="vide">Aucun réglage.</div>'; return; }
+    el.innerHTML = params.map(function(p) {
+      return '<div class="plat"><div class="p-info"><div class="p-nom">' + esc(p.cle) + '</div><div class="p-desc">' + esc(p.valeur) + "</div></div>" +
+        '<button class="btn btn-s" onclick="editerParametre(\'' + esc(p.cle) + '\')">✏️</button>' +
+        '<button class="btn btn-d" onclick="supprimerParametre(\'' + esc(p.cle) + '\')">🗑️</button></div>';
+    }).join("");
+  });
+}
+function editerParametre(cle) {
+  var existant = null;
+  if (cle) {
+    api("admin/parametres/").then(function(d) {
+      existant = (d.parametres || []).find(function(p) { return p.cle === cle; });
+      modal("<h3>Modifier le réglage</h3>" +
+        '<div class="champ"><label>Clé</label><input id="r-cle" value="' + esc(existant.cle) + '" disabled></div>' +
+        '<div class="champ"><label>Valeur</label><textarea id="r-val" rows="3">' + esc(existant.valeur) + "</textarea></div>" +
+        '<div class="m-actions"><button class="btn btn-s" onclick="fermerModal()">Annuler</button>' +
+        '<button class="btn btn-p" onclick="sauverParametre()">Enregistrer</button></div>');
+    });
+  } else {
+    modal("<h3>Nouveau réglage</h3>" +
+      '<div class="champ"><label>Clé</label><input id="r-cle"></div>' +
+      '<div class="champ"><label>Valeur</label><textarea id="r-val" rows="3"></textarea></div>' +
+      '<div class="m-actions"><button class="btn btn-s" onclick="fermerModal()">Annuler</button>' +
+      '<button class="btn btn-p" onclick="sauverParametre()">Enregistrer</button></div>');
+  }
+}
+function sauverParametre() {
+  api("admin/parametre/save/", {cle: document.getElementById("r-cle").value, valeur: document.getElementById("r-val").value})
+    .then(function() { fermerModal(); toast("Réglage enregistré ✓"); chargerReglages(); });
+}
+function supprimerParametre(cle) {
+  if (!confirm("Supprimer ce réglage ?")) return;
+  api("admin/parametre/save/", {cle: cle, valeur: ""}).then(function() { toast("Réglage effacé"); chargerReglages(); });
+}
+
+/* ---------- DÉMARRAGE ---------- */
+if (TOKEN) {
+  api("admin/stats/").then(function(d) { if (d.success) ouvrirApp(); else localStorage.removeItem("mclub-admin-token"); });
+}
+</script>
+</body>
+</html>
